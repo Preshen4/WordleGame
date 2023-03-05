@@ -6,45 +6,63 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
+import android.widget.Button
 import android.widget.EditText
+import android.widget.LinearLayout
+import android.widget.TextView
 import android.widget.Toast
 import androidx.core.widget.addTextChangedListener
 import com.example.wordleapp.databinding.ActivityMainBinding
+import org.w3c.dom.Text
 import java.util.*
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivityMainBinding
+
+    var numberOfAttempts = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+
+        setContentView(R.layout.activity_main)
 
         supportActionBar?.hide()
         val word = getRandomWord()
 
+        val userName = intent.getStringExtra("Username")
+
+        val txtWelcome = findViewById<TextView>(R.id.txtWelcome)
+
+        txtWelcome.setText("Welcome $userName")
+
         keepFocus()
 
-        binding.edt15.addTextChangedListener {
-            validateRow(binding.edt11,binding.edt12,binding.edt13,binding.edt14,binding.edt15, word)
+        val mainLayout = findViewById<LinearLayout>(R.id.main_layout)
+        val mainLayoutCount = mainLayout.childCount  - 1
+
+        for (i in 0..mainLayoutCount)  {
+            val childLayout= mainLayout.getChildAt(i) as LinearLayout
+            val childLayoutCount = childLayout.childCount - 1
+            val editTextList = mutableListOf<EditText>()
+
+            for (j in 0..childLayoutCount) {
+                editTextList.add(childLayout.getChildAt(j) as EditText)
+
+
+            }
+            val row =  childLayout.getChildAt(childLayoutCount) as EditText
+            row.addTextChangedListener() {
+                validateRow(editTextList, word)
+            }
         }
 
-        binding.edt25.addTextChangedListener {
-            validateRow(binding.edt21,binding.edt22,binding.edt23,binding.edt24,binding.edt25, word)
+        val btnPlayAgain = findViewById<Button>(R.id.btnPlayAgain)
+
+        btnPlayAgain.setOnClickListener() {
+            val intent = intent
+            startActivity(intent)
         }
 
-        binding.edt35.addTextChangedListener {
-            validateRow(binding.edt31,binding.edt32,binding.edt33,binding.edt34,binding.edt35, word)
-        }
-
-        binding.edt45.addTextChangedListener {
-            validateRow(binding.edt41,binding.edt42,binding.edt43,binding.edt44,binding.edt45, word)
-        }
-
-        binding.edt55.addTextChangedListener {
-            validateRow(binding.edt51,binding.edt52,binding.edt53,binding.edt54,binding.edt55, word)
-        }
 
     }
 
@@ -57,13 +75,12 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    fun validateRow(edt1: EditText, edt2: EditText, edt3: EditText, edt4: EditText, edt5: EditText, word: String) {
-        val editTexts = listOf(edt1, edt2, edt3, edt4, edt5)
+    fun validateRow(editTextList: MutableList<EditText>, word: String) {
         val wordChars = word.toCharArray()
-
+        numberOfAttempts++
         var correctLetters = 0 // Initialize the counter
 
-        editTexts.forEachIndexed { index, editText ->
+        editTextList.forEachIndexed { index, editText ->
             val editTextChar = editText.text.toString().getOrNull(0)
             val wordChar = wordChars.getOrNull(index)
 
@@ -81,23 +98,58 @@ class MainActivity : AppCompatActivity() {
         }
 
         if (correctLetters == word.length) {
-            Toast.makeText(edt1.context, "Congratulations, you've solved it!", Toast.LENGTH_SHORT).show()
-            binding.Win.visibility = View.VISIBLE
+
+            val winText = findViewById<TextView>(R.id.Win)
+            winText.visibility = View.VISIBLE
+
+            val btnPlayAgain = findViewById<Button>(R.id.btnPlayAgain)
+            btnPlayAgain.visibility = View.VISIBLE
+
+
+            val mainLayout = findViewById<LinearLayout>(R.id.main_layout)
+            val mainLayoutCount = mainLayout.childCount  - 1
+
+            for (i in 0..mainLayoutCount)  {
+                val childLayout= mainLayout.getChildAt(i) as LinearLayout
+                val childLayoutCount = childLayout.childCount - 1
+
+
+                for (j in 0..childLayoutCount) {
+                    val editTxt = childLayout.getChildAt(j) as EditText
+                    editTxt.isEnabled = false
+                }
+            }
+
         }
+
+        if (numberOfAttempts == 5 && correctLetters != word.length) {
+            val winText = findViewById<TextView>(R.id.Win)
+            winText.setText("Game Over")
+            winText.visibility = View.VISIBLE
+            val btnPlayAgain = findViewById<Button>(R.id.btnPlayAgain)
+            btnPlayAgain.visibility = View.VISIBLE
+        }
+
     }
 
     fun keepFocus(){
 
-        val editTexts = listOf(
-            binding.edt11, binding.edt12, binding.edt13, binding.edt14, binding.edt15,
-            binding.edt21, binding.edt22, binding.edt23, binding.edt24, binding.edt25,
-            binding.edt31, binding.edt32, binding.edt33, binding.edt34, binding.edt35,
-            binding.edt41, binding.edt42, binding.edt43, binding.edt44, binding.edt45,
-            binding.edt51, binding.edt52, binding.edt53, binding.edt54, binding.edt55
-        )
+        val editTextList = mutableListOf<EditText>()
+        val mainLayout = findViewById<LinearLayout>(R.id.main_layout)
+        val mainLayoutCount = mainLayout.childCount  - 1
 
-        for (i in 0 until editTexts.size - 1) {
-            getNewLetter(editTexts[i], editTexts[i + 1])
+        for (i in 0..mainLayoutCount)  {
+            val childLayout= mainLayout.getChildAt(i) as LinearLayout
+            val childLayoutCount = childLayout.childCount - 1
+
+
+            for (j in 0..childLayoutCount) {
+                editTextList.add(childLayout.getChildAt(j) as EditText)
+            }
+        }
+
+        for (i in 0 until editTextList.size - 1) {
+            getNewLetter(editTextList[i], editTextList[i + 1])
         }
     }
 

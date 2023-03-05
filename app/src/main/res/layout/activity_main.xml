@@ -16,6 +16,7 @@
         android:textSize="32sp"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="40dp"
+        android:id="@+id/txtWelcome"
         />
 
     <LinearLayout
@@ -387,7 +388,9 @@
 
         </LinearLayout>
 
+
     </LinearLayout>
+
 
     <TextView
         android:id="@+id/Win"
@@ -403,5 +406,18 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="10dp"
         />
+
+    <Button
+        android:layout_below="@id/Win"
+        android:layout_centerHorizontal="true"
+        android:layout_width="250dp"
+        android:layout_height="75dp"
+        android:textSize="32dp"
+        android:backgroundTint="#51864a"
+        android:text="Play Again"
+        android:id="@+id/btnPlayAgain"
+        android:visibility="invisible"
+        />
+
 
 </RelativeLayout>
