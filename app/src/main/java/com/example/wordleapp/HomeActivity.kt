@@ -17,7 +17,7 @@ class HomeActivity : AppCompatActivity() {
         btnPlay.setOnClickListener() {
             val intent = Intent(this, MainActivity::class.java)
 
-            intent.putExtra("Username",username.text)
+            intent.putExtra("Username",username.text.toString())
             startActivity(intent)
             this.finish()
         }

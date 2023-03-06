@@ -4,13 +4,17 @@ import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
+import android.text.InputFilter
 import android.text.TextWatcher
+import android.view.Gravity
 import android.view.View
+import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.view.marginBottom
 import androidx.core.widget.addTextChangedListener
 import com.example.wordleapp.databinding.ActivityMainBinding
 import org.w3c.dom.Text
@@ -33,28 +37,15 @@ class MainActivity : AppCompatActivity() {
 
         val txtWelcome = findViewById<TextView>(R.id.txtWelcome)
 
+
+
+
+
         txtWelcome.setText("Welcome $userName")
 
         keepFocus()
 
-        val mainLayout = findViewById<LinearLayout>(R.id.main_layout)
-        val mainLayoutCount = mainLayout.childCount  - 1
-
-        for (i in 0..mainLayoutCount)  {
-            val childLayout= mainLayout.getChildAt(i) as LinearLayout
-            val childLayoutCount = childLayout.childCount - 1
-            val editTextList = mutableListOf<EditText>()
-
-            for (j in 0..childLayoutCount) {
-                editTextList.add(childLayout.getChildAt(j) as EditText)
-
-
-            }
-            val row =  childLayout.getChildAt(childLayoutCount) as EditText
-            row.addTextChangedListener() {
-                validateRow(editTextList, word)
-            }
-        }
+        loopChild(word, ::populateList)
 
         val btnPlayAgain = findViewById<Button>(R.id.btnPlayAgain)
 
@@ -171,6 +162,62 @@ class MainActivity : AppCompatActivity() {
             }
 
         })
+    }
+
+    fun loopChild(word: String, addList: (input: MutableList<EditText>, childElement: EditText) -> Unit) {
+        val mainLayout = findViewById<LinearLayout>(R.id.main_layout)
+        val mainLayoutCount = mainLayout.childCount  - 1
+        for (i in 0..mainLayoutCount)  {
+            val childLayout= mainLayout.getChildAt(i) as LinearLayout
+            val childLayoutCount = childLayout.childCount - 1
+            val editTextList = mutableListOf<EditText>()
+
+            for (j in 0..childLayoutCount) {
+                //editTextList.add(childLayout.getChildAt(j) as EditText)
+                addList(editTextList, childLayout.getChildAt(j) as EditText)
+
+            }
+            val row =  childLayout.getChildAt(childLayoutCount) as EditText
+            row.addTextChangedListener() {
+                validateRow(editTextList, word)
+            }
+        }
+    }
+
+    fun populateList(input: MutableList<EditText>, childElement: EditText) {
+        input.add(childElement)
+    }
+
+    fun generateEditText() : EditText {
+
+
+        val editT =  EditText(this)
+        val params = editT.layoutParams as ViewGroup.MarginLayoutParams
+        params.setMargins(5, 5, 5, 5)
+        editT.filters = arrayOf(InputFilter.LengthFilter(1))
+        editT.layoutParams.width = 60
+        editT.textSize = 23F
+        editT.isAllCaps = true
+        editT.layoutParams.height = 60
+        editT.setBackgroundResource(R.drawable.bg_edttxt)
+        editT.gravity = Gravity.CENTER
+        editT.layoutParams = params
+        return editT
+    }
+
+    fun addEditText() {
+        val mainLayout = findViewById<LinearLayout>(R.id.main_layout)
+        val mainLayoutCount = mainLayout.childCount  - 1
+        for (i in 0..mainLayoutCount)  {
+            val childLayout= mainLayout.getChildAt(i) as LinearLayout
+            val childLayoutCount = childLayout.childCount - 1
+            val editTextList = mutableListOf<EditText>()
+
+            for (j in 0..childLayoutCount) {
+                //editTextList.add(childLayout.getChildAt(j) as EditText)
+                childLayout.addView(generateEditText())
+
+            }
     }
 
 }
