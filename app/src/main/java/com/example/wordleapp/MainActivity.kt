@@ -1,10 +1,12 @@
 package com.example.wordleapp
 
+import android.content.Context
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
 import android.text.InputFilter
+import android.text.InputType
 import android.text.TextWatcher
 import android.view.Gravity
 import android.view.View
@@ -13,35 +15,38 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
-import android.widget.Toast
-import androidx.core.view.marginBottom
 import androidx.core.widget.addTextChangedListener
 import com.example.wordleapp.databinding.ActivityMainBinding
-import org.w3c.dom.Text
 import java.util.*
 
 class MainActivity : AppCompatActivity() {
 
-
+    private lateinit var binding: ActivityMainBinding
     var numberOfAttempts = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+
+        setContentView(binding.root)
 
         supportActionBar?.hide()
-        val word = getRandomWord()
+        val word = getRandomWord().uppercase()
 
         val userName = intent.getStringExtra("Username")
 
         val txtWelcome = findViewById<TextView>(R.id.txtWelcome)
 
-
-
-
-
         txtWelcome.setText("Welcome $userName")
+
+        val wordBoard = WordBoard()
+
+        for (i in 0..4)
+        {
+            wordBoard.createRow(this, binding)
+        }
+
 
         keepFocus()
 
@@ -53,7 +58,6 @@ class MainActivity : AppCompatActivity() {
             val intent = intent
             startActivity(intent)
         }
-
 
     }
 
@@ -72,7 +76,7 @@ class MainActivity : AppCompatActivity() {
         var correctLetters = 0 // Initialize the counter
 
         editTextList.forEachIndexed { index, editText ->
-            val editTextChar = editText.text.toString().getOrNull(0)
+            val editTextChar = editText.text.toString().uppercase().getOrNull(0)
             val wordChar = wordChars.getOrNull(index)
 
             val backgroundColor = when {
@@ -188,36 +192,19 @@ class MainActivity : AppCompatActivity() {
         input.add(childElement)
     }
 
-    fun generateEditText() : EditText {
-
-
-        val editT =  EditText(this)
-        val params = editT.layoutParams as ViewGroup.MarginLayoutParams
-        params.setMargins(5, 5, 5, 5)
-        editT.filters = arrayOf(InputFilter.LengthFilter(1))
-        editT.layoutParams.width = 60
-        editT.textSize = 23F
-        editT.isAllCaps = true
-        editT.layoutParams.height = 60
-        editT.setBackgroundResource(R.drawable.bg_edttxt)
-        editT.gravity = Gravity.CENTER
-        editT.layoutParams = params
-        return editT
-    }
-
-    fun addEditText() {
+    /*fun addEditText() {
         val mainLayout = findViewById<LinearLayout>(R.id.main_layout)
-        val mainLayoutCount = mainLayout.childCount  - 1
-        for (i in 0..mainLayoutCount)  {
-            val childLayout= mainLayout.getChildAt(i) as LinearLayout
+        val mainLayoutCount = mainLayout.childCount - 1
+        for (i in 0..mainLayoutCount) {
+            val childLayout = mainLayout.getChildAt(i) as LinearLayout
             val childLayoutCount = childLayout.childCount - 1
             val editTextList = mutableListOf<EditText>()
 
             for (j in 0..childLayoutCount) {
                 //editTextList.add(childLayout.getChildAt(j) as EditText)
-                childLayout.addView(generateEditText())
+                childLayout.addView(generateEditText(this))
 
             }
-    }
-
+        }
+    }*/
 }
