@@ -12,11 +12,10 @@ import androidx.core.widget.addTextChangedListener
 import com.example.wordleapp.databinding.ActivityMainBinding
 import java.util.*
 
-class Game {
+class Game(private val binding: ActivityMainBinding) {
 
     var numberOfAttempts = 0
-
-    private lateinit var binding: ActivityMainBinding
+    
 
     private val winText = binding.Win
     private val btnPlayAgain = binding.btnPlayAgain

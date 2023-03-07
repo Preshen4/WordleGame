@@ -33,7 +33,7 @@ class MainActivity : AppCompatActivity() {
 
         supportActionBar?.hide()
 
-        val game = Game()
+        val game = Game(binding)
 
         val word = game.getRandomWord()
 
