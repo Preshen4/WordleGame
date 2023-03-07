@@ -33,21 +33,13 @@ class MainActivity : AppCompatActivity() {
 
         supportActionBar?.hide()
 
-        val game = Game(binding)
+        val game = Game(binding,this)
 
         val word = game.getRandomWord()
 
         val userName = intent.getStringExtra("Username")
 
         binding.txtWelcome.setText("Welcome $userName")
-
-        val wordBoard = WordBoard()
-
-        for (i in 0..4)
-        {
-            wordBoard.createRow(this, binding)
-        }
-
 
         game.keepFocus()
 

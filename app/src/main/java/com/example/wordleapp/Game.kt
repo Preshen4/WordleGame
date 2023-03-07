@@ -1,5 +1,6 @@
 package com.example.wordleapp
 
+import android.content.Context
 import android.graphics.Color
 import android.text.Editable
 import android.text.TextWatcher
@@ -12,8 +13,16 @@ import androidx.core.widget.addTextChangedListener
 import com.example.wordleapp.databinding.ActivityMainBinding
 import java.util.*
 
-class Game(private val binding: ActivityMainBinding) {
+class Game(private val binding: ActivityMainBinding, context: Context) {
+    init {
+        val wordBoard = WordBoard()
 
+        for (i in 0..4)
+        {
+            wordBoard.createRow(context, binding)
+        }
+
+    }
     var numberOfAttempts = 0
     
 
