@@ -59,5 +59,21 @@
         android:id="@+id/btnPlay"
         />
 
+    <Button
+        android:layout_width="350dp"
+        android:layout_height="wrap_content"
+        android:textSize="42dp"
+
+        android:layout_gravity="center"
+        android:text="Word List"
+        android:gravity="center"
+        android:backgroundTint="@color/material_dynamic_primary50"
+        android:id="@+id/btnWordList"
+        />
+
+
+
+
+
 
 </LinearLayout>

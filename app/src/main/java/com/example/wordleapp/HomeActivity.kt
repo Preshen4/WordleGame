@@ -21,5 +21,13 @@ class HomeActivity : AppCompatActivity() {
             startActivity(intent)
             this.finish()
         }
+
+        val btnWordList = findViewById<Button>(R.id.btnWordList)
+
+        btnWordList.setOnClickListener(){
+            val intent = Intent(this, ListActivity::class.java)
+            startActivity(intent)
+            this.finish()
+        }
     }
 }
